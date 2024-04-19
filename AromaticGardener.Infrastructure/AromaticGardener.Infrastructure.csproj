@@ -18,4 +18,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AromaticGardener.Domain\AromaticGardener.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AromaticGardener.Domain.Entities
+﻿namespace AromaticGardener.Domain.Entities
 {
-    public class Herbs
+    public class Herb
     {
         public int Id { get; set; }
         public required string CommonName { get; set; }
         public string? Description { get; set; }
+        public string? Bloom { get; set; }
         public string? BestSoilType { get; set; }
         public required double SoilPhMin { get; set; }
         public required double SoilPhMax { get; set; }
