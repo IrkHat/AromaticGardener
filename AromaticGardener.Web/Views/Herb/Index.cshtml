@@ -1,66 +1,69 @@
-﻿@model IEnumerable<AromaticGardener.Domain.Entities.Herb>
+﻿@model IEnumerable<Herb>
 
-<div class="container mt-5">
-    <h2 class="mb-4">Herbs</h2>
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-responsive-md table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Common Name</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Bloom Time</th>
-                        <th scope="col">Best Soil</th>
-                        <th scope="col">Soil Min. pH</th>
-                        <th scope="col">Soil Max. pH</th>
-                        <th scope="col">Watering</th>
-                        <th scope="col">Insulation</th>
-                        <th scope="col">Growth Habit</th>
-                        <th scope="col">Life Cycle</th>
-                        <th scope="col">Kingdom</th>
-                        <th scope="col">Subkingdom</th>
-                        <th scope="col">Superdivision</th>
-                        <th scope="col">Division</th>
-                        <th scope="col">Class</th>
-                        <th scope="col">Subclass</th>
-                        <th scope="col">Order</th>
-                        <th scope="col">Family</th>
-                        <th scope="col">Genus</th>
-                        <th scope="col">Species</th>
-                        <th scope="col">Image Url</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach(var objh in Model)
-                                   {
+<div class="w-100 card border-0 p-3">
+    <div class="card-header bg-success bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Herb List</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body border p-4">
+        <div class="row pb-3">
+            <div class="col-6 offset-6 text-end">
+                <a asp-action="Create" class="btn btn-secondary">
+                    <i class="bi bi-plus-circle"></i> Create New Herb
+                </a>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Common Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Bloom Time</th>
+                    <th scope="col">Best Soil</th>
+                    <th scope="col">Soil Min. pH</th>
+                    <th scope="col">Soil Max. pH</th>
+                    <th scope="col">Watering</th>
+                    <th scope="col">Insulation</th>
+                    <th scope="col">Growth Habit</th>
+                    <th scope="col">Life Cycle</th>
+                    <th scope="col">Image Url</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var objh in Model)
+                {
                     <tr>
                         <td>@objh.Id</td>
-                            <td>@objh.CommonName</td>
-                            <td>@objh.Description</td>
-                            <td>@objh.Bloom</td>
-                            <td>@objh.BestSoilType</td>
-                            <td>@objh.SoilPhMin</td>
-                            <td>@objh.SoilPhMax</td>
-                            <td>@objh.Watering</td>
-                            <td>@objh.Insulation</td>
-                            <td>@objh.GrowthHabit</td>
-                            <td>@objh.LifeCycle</td>
-                            <td>@objh.Kingdom</td>
-                            <td>@objh.Subkingdom</td>
-                            <td>@objh.Superdivision</td>
-                            <td>@objh.Division</td>
-                            <td>@objh.Class</td>
-                            <td>@objh.Subclass</td>
-                            <td>@objh.Order</td>
-                            <td>@objh.Family</td>
-                            <td>@objh.Genus</td>
-                            <td>@objh.Species</td>
-                            <td>@objh.ImageUrl</td>
+                        <td>@objh.CommonName</td>
+                        <td>@objh.Description</td>
+                        <td>@objh.Bloom</td>
+                        <td>@objh.BestSoilType</td>
+                        <td>@objh.SoilPhMin</td>
+                        <td>@objh.SoilPhMax</td>
+                        <td>@objh.Watering</td>
+                        <td>@objh.Insulation</td>
+                        <td>@objh.GrowthHabit</td>
+                        <td>@objh.LifeCycle</td>
+                        <td>@objh.ImageUrl</td>
+                        <td>
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-action="Update" asp-route-herbId="@objh.Id" class="btn btn-success">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                <a asp-action="Delete" asp-route-herbId="@objh.Id" class="btn btn-danger">
+                                    <i class="bi bi-trash-fill"></i> Delete
+                                </a>
+                            </div>
+                        </td>
                     </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     </div>
 </div>

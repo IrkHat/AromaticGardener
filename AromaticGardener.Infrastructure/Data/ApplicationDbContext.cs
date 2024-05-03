@@ -26,16 +26,6 @@ namespace AromaticGardener.Infrastructure.Data
                     Insulation = "Full",
                     GrowthHabit = "Herb",
                     LifeCycle = "Perennial",
-                    Kingdom = "Plantae",
-                    Subkingdom = "",
-                    Superdivision = "",
-                    Division = "Magnoliophyta",
-                    Class = "Magnoliopsida",
-                    Subclass = "",
-                    Order = "Lamiales",
-                    Family = "Lamiaceae",
-                    Genus = "Origanum",
-                    Species = "Origanum vulgare",
                     ImageUrl = ""
                 }
 
