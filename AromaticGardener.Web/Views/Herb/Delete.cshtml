@@ -1,4 +1,4 @@
-﻿@model Herb
+﻿@model HerbVM
 
 <div class="w-100 card border-0 p-4">
     <div class="card-header bg-success bg-gradient ml-0 py-3">
@@ -11,51 +11,62 @@
 
     <div class="card-body border p-4">
         <form method="post" class="row">
-            <input asp-for="Id" hidden />
+            <input asp-for="Herb.Id" hidden />
             <div class="p-3">
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="CommonName" disabled class="form-control border shadow" />
-                    <label asp-for="CommonName" class="ms-2"></label>
+                    <input disabled asp-for="Herb.CommonName" class="form-control border shadow" />
+                    <label asp-for="Herb.CommonName" class="ms-2"></label>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="Description" disabled class="form-control border shadow" />
-                    <label asp-for="Description" class="ms-2"></label>
+                    <input disabled asp-for="Herb.ScientificName" class="form-control border shadow" />
+                    <label asp-for="Herb.ScientificName" class="ms-2"></label>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="Bloom" disabled class="form-control border shadow" />
-                    <label asp-for="Bloom" class="ms-2"></label>
+                    <input disabled asp-for="Herb.Description" class="form-control border shadow" />
+                    <label asp-for="Herb.Description" class="ms-2"></label>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="BestSoilType" disabled class="form-control border shadow" />
-                    <label asp-for="BestSoilType" class="ms-2"></label>
+                    <input disabled asp-for="Herb.Bloom" class="form-control border shadow" />
+                    <label asp-for="Herb.Bloom" class="ms-2"></label>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="SoilPhMin" disabled class="form-control border shadow" />
-                    <label asp-for="SoilPhMin" class="ms-2"></label>
+                    <input disabled asp-for="Herb.BestSoilType" class="form-control border shadow" />
+                    <label asp-for="Herb.BestSoilType" class="ms-2"></label>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="SoilPhMax" disabled class="form-control border shadow" />
-                    <label asp-for="SoilPhMax" class="ms-2"></label>
+                    <input disabled asp-for="Herb.SoilPhMin" class="form-control border shadow" />
+                    <label asp-for="Herb.SoilPhMin" class="ms-2"></label>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="Watering" disabled class="form-control border shadow" />
-                    <label asp-for="Watering" class="ms-2"></label>
+                    <input disabled asp-for="Herb.SoilPhMax" class="form-control border shadow" />
+                    <label asp-for="Herb.SoilPhMax" class="ms-2"></label>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="Insulation" disabled class="form-control border shadow" />
-                    <label asp-for="Insulation" class="ms-2"></label>
+                    <input disabled asp-for="Herb.Watering" class="form-control border shadow" />
+                    <label asp-for="Herb.Watering" class="ms-2"></label>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="GrowthHabit" disabled class="form-control border shadow" />
-                    <label asp-for="GrowthHabit" class="ms-2"></label>
+                    <input disabled asp-for="Herb.Insulation" class="form-control border shadow" />
+                    <label asp-for="Herb.Insulation" class="ms-2"></label>
                 </div>
+
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="LifeCycle" disabled class="form-control border shadow" />
-                    <label asp-for="LifeCycle" class="ms-2"></label>
+                    <select asp-for="@Model.Herb.GrowthHabitId" asp-items="@Model.GrowthHabitList" class="form-select border shadow">
+                        <option disabled selected>-- Select Habit --</option>
+                    </select>
+                    <label asp-for="Herb.GrowthHabit.Habit" class="ms-2"></label>
                 </div>
+
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="ImageUrl" disabled class="form-control border shadow" />
-                    <label asp-for="ImageUrl" class="ms-2"></label>
+                    <select asp-for="@Model.Herb.LifeCycleId" asp-items="@Model.LifeCycleList" class="form-select border shadow">
+                        <option disabled selected>-- Select Cycle --</option>
+                    </select>
+                    <label asp-for="Herb.LifeCycle.Cycle" class="ms-2"></label>
+                </div>
+
+                <div class="form-floating py-1 col-12">
+                    <input asp-for="Herb.ImageUrl" class="form-control border shadow" />
+                    <label asp-for="Herb.ImageUrl" class="ms-2"></label>
                 </div>
 
                 <div class="row pt-2">

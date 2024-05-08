@@ -1,6 +1,9 @@
-﻿using AromaticGardener.Domain.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using AromaticGardener.Domain.Entities;
 using AromaticGardener.Infrastructure.Data;
-using Microsoft.AspNetCore.Mvc;
+using AromaticGardener.Web.ViewModels;
 
 namespace AromaticGardener.Web.Controllers
 {
@@ -13,71 +16,143 @@ namespace AromaticGardener.Web.Controllers
         }
         public IActionResult Index()
         {
-            var herbs = _db.Herbs.ToList();
+            var herbs = _db.Herbs
+                 .Include(u => u.LifeCycle)
+                 .Include(x => x.GrowthHabit)
+                 .ToList();
+
             return View(herbs);
         }
 
         //          GET
         public IActionResult Create()
         {
-            return View();
+            HerbVM herbVM = new()
+            {
+                LifeCycleList = _db.LifeCycles.ToList().Select(u => new SelectListItem
+                {
+                    Text = u.Cycle,
+                    Value = u.Id.ToString(),
+                }),
+                GrowthHabitList = _db.GrowthHabits.ToList().Select(y => new SelectListItem
+                {
+                    Text = y.Habit,
+                    Value = y.Id.ToString(),
+                })
+            };
+
+            return View(herbVM);
         }
 
         //          POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Herb obj)
+        public IActionResult Create(HerbVM obj)
         {
             if (ModelState.IsValid)
             {
-                _db.Herbs.Add(obj);
+                _db.Herbs.Add(obj.Herb);
                 _db.SaveChanges();
                 TempData["success"] = "The herb record has been created successfully!";
                 return RedirectToAction(nameof(Index));
             }
             TempData["error"] = "The herb record could not be created...";
+
+            obj.LifeCycleList = _db.LifeCycles.ToList().Select(u => new SelectListItem
+            {
+                Text = u.Cycle,
+                Value = u.Id.ToString(),
+            });
+            obj.GrowthHabitList = _db.GrowthHabits.ToList().Select(y => new SelectListItem
+            {
+                Text = y.Habit,
+                Value = y.Id.ToString(),
+            });
+
+
             return View(obj);
         }
         public IActionResult Update(int herbId)
         {
-            Herb? obj = _db.Herbs.FirstOrDefault(_ => _.Id == herbId);
-            if (obj is null)
+            HerbVM herbVM = new()
+            {
+                LifeCycleList = _db.LifeCycles.ToList().Select(u => new SelectListItem
+                {
+                    Text = u.Cycle,
+                    Value = u.Id.ToString(),
+                }),
+                GrowthHabitList = _db.GrowthHabits.ToList().Select(y => new SelectListItem
+                {
+                    Text = y.Habit,
+                    Value = y.Id.ToString(),
+                }),
+                Herb = _db.Herbs.FirstOrDefault(_ => _.Id == herbId)!
+            };
+
+            if (herbVM.Herb is null)
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            return View(obj);
+            return View(herbVM);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(Herb obj)
+        public IActionResult Update(HerbVM herbVM)
         {
-            if (ModelState.IsValid && obj.Id > 0)
+            if (ModelState.IsValid && herbVM.Herb.Id > 0)
             {
-                _db.Herbs.Update(obj);
+                _db.Herbs.Update(herbVM.Herb);
                 _db.SaveChanges();
                 TempData["success"] = "The herb record has been updated successfully!";
                 return RedirectToAction(nameof(Index));
             }
 
+
+            herbVM.LifeCycleList = _db.LifeCycles.ToList().Select(u => new SelectListItem
+            {
+                Text = u.Cycle,
+                Value = u.Id.ToString(),
+            });
+            herbVM.GrowthHabitList = _db.GrowthHabits.ToList().Select(y => new SelectListItem
+            {
+                Text = y.Habit,
+                Value = y.Id.ToString(),
+            });
+
             TempData["error"] = "The herb record could not be updated...";
-            return View(obj);
+
+            return View(herbVM);
         }
         public IActionResult Delete(int herbId)
         {
-            Herb? obj = _db.Herbs.FirstOrDefault(_ => _.Id == herbId);
+            HerbVM herbVM = new()
+            {
+                LifeCycleList = _db.LifeCycles.ToList().Select(u => new SelectListItem
+                {
+                    Text = u.Cycle,
+                    Value = u.Id.ToString(),
+                }),
+                GrowthHabitList = _db.GrowthHabits.ToList().Select(y => new SelectListItem
+                {
+                    Text = y.Habit,
+                    Value = y.Id.ToString(),
+                }),
+                Herb = _db.Herbs.FirstOrDefault(_ => _.Id == herbId)!
+            };
 
-            if (obj is null)
+            if (herbVM.Herb is null)
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            return View(obj);
+            return View(herbVM);
+
         }
         [HttpPost]
-        public IActionResult Delete(Herb obj)
+        public IActionResult Delete(HerbVM herbVM)
         {
-            Herb? objFromDb = _db.Herbs.FirstOrDefault(_ => _.Id == obj.Id);
+            Herb? objFromDb = _db.Herbs.FirstOrDefault(_ => _.Id == herbVM.Herb.Id);
 
             if (objFromDb is not null)
             {
@@ -90,7 +165,7 @@ namespace AromaticGardener.Web.Controllers
             }
 
             TempData["error"] = "The herb record could not be deleted...";
-            return View(obj);
+            return View(herbVM);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model Herb
+﻿@model HerbVM
 
 <div class="w-100 card border-0 p-3">
     <div class="card-header bg-success bg-gradient ml-0 py-3">
@@ -13,59 +13,71 @@
         <form method="post" class="row">
             <div class="p-3">
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="CommonName" class="form-control border shadow" />
-                    <label asp-for="CommonName" class="ms-2"></label>
-                    <span asp-validation-for="CommonName" class="text-danger"></span>
+                    <input asp-for="Herb.CommonName" class="form-control border shadow" />
+                    <label asp-for="Herb.CommonName" class="ms-2"></label>
+                    <span asp-validation-for="Herb.CommonName" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="Description" class="form-control border shadow" />
-                    <label asp-for="Description" class="ms-2"></label>
-                    <span asp-validation-for="Description" class="text-danger"></span>
+                    <input asp-for="Herb.ScientificName" class="form-control border shadow" />
+                    <label asp-for="Herb.ScientificName" class="ms-2"></label>
+                    <span asp-validation-for="Herb.ScientificName" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="Bloom" class="form-control border shadow" />
-                    <label asp-for="Bloom" class="ms-2"></label>
-                    <span asp-validation-for="Bloom" class="text-danger"></span>
+                    <input asp-for="Herb.Description" class="form-control border shadow" />
+                    <label asp-for="Herb.Description" class="ms-2"></label>
+                    <span asp-validation-for="Herb.Description" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="BestSoilType" class="form-control border shadow" />
-                    <label asp-for="BestSoilType" class="ms-2"></label>
-                    <span asp-validation-for="BestSoilType" class="text-danger"></span>
+                    <input asp-for="Herb.Bloom" class="form-control border shadow" />
+                    <label asp-for="Herb.Bloom" class="ms-2"></label>
+                    <span asp-validation-for="Herb.Bloom" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="SoilPhMin" class="form-control border shadow" />
-                    <label asp-for="SoilPhMin" class="ms-2"></label>
-                    <span asp-validation-for="SoilPhMin" class="text-danger"></span>
+                    <input asp-for="Herb.BestSoilType" class="form-control border shadow" />
+                    <label asp-for="Herb.BestSoilType" class="ms-2"></label>
+                    <span asp-validation-for="Herb.BestSoilType" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="SoilPhMax" class="form-control border shadow" />
-                    <label asp-for="SoilPhMax" class="ms-2"></label>
-                    <span asp-validation-for="SoilPhMax" class="text-danger"></span>
+                    <input asp-for="Herb.SoilPhMin" class="form-control border shadow" />
+                    <label asp-for="Herb.SoilPhMin" class="ms-2"></label>
+                    <span asp-validation-for="Herb.SoilPhMin" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="Watering" class="form-control border shadow" />
-                    <label asp-for="Watering" class="ms-2"></label>
-                    <span asp-validation-for="Watering" class="text-danger"></span>
+                    <input asp-for="Herb.SoilPhMax" class="form-control border shadow" />
+                    <label asp-for="Herb.SoilPhMax" class="ms-2"></label>
+                    <span asp-validation-for="Herb.SoilPhMax" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="Insulation" class="form-control border shadow" />
-                    <label asp-for="Insulation" class="ms-2"></label>
-                    <span asp-validation-for="Insulation" class="text-danger"></span>
+                    <input asp-for="Herb.Watering" class="form-control border shadow" />
+                    <label asp-for="Herb.Watering" class="ms-2"></label>
+                    <span asp-validation-for="Herb.Watering" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="GrowthHabit" class="form-control border shadow" />
-                    <label asp-for="GrowthHabit" class="ms-2"></label>
-                    <span asp-validation-for="GrowthHabit" class="text-danger"></span>
+                    <input asp-for="Herb.Insulation" class="form-control border shadow" />
+                    <label asp-for="Herb.Insulation" class="ms-2"></label>
+                    <span asp-validation-for="Herb.Insulation" class="text-danger"></span>
                 </div>
+
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="LifeCycle" class="form-control border shadow" />
-                    <label asp-for="LifeCycle" class="ms-2"></label>
-                    <span asp-validation-for="LifeCycle" class="text-danger"></span>
+                    <select asp-for="@Model.Herb.GrowthHabitId" asp-items="@Model.GrowthHabitList" class="form-select border shadow">
+                        <option disabled selected>-- Select Habit --</option>
+                    </select>
+                    <label asp-for="Herb.GrowthHabit.Habit" class="ms-2"></label>
+                    <span asp-validation-for="Herb.GrowthHabitId" class="text-danger"></span>
                 </div>
+
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="ImageUrl" class="form-control border shadow" />
-                    <label asp-for="ImageUrl" class="ms-2"></label>
-                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    <select asp-for="@Model.Herb.LifeCycleId" asp-items="@Model.LifeCycleList" class="form-select border shadow">
+                        <option disabled selected>-- Select Cycle --</option>
+                    </select>
+                    <label asp-for="Herb.LifeCycle.Cycle" class="ms-2"></label>
+                    <span asp-validation-for="Herb.LifeCycleId" class="text-danger"></span>
+                </div>           
+
+                <div class="form-floating py-1 col-12">
+                    <input asp-for="Herb.ImageUrl" class="form-control border shadow" />
+                    <label asp-for="Herb.ImageUrl" class="ms-2"></label>
+                    <span asp-validation-for="Herb.ImageUrl" class="text-danger"></span>
                 </div>
 
                 <div class="row pt-2">

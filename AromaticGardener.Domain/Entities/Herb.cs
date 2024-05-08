@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AromaticGardener.Domain.Entities
@@ -14,7 +15,7 @@ namespace AromaticGardener.Domain.Entities
         public string? Description { get; set; }
         [Display(Name = "Blooms In")]
         public string? Bloom { get; set; }
-        [Display(Name = "Best Soil Type")]
+        [Display(Name = "Best Substrate Type")]
         public string? BestSoilType { get; set; }
         [Display(Name = "Minimum Soil pH")]
         [Range(0,14)]
@@ -28,11 +29,14 @@ namespace AromaticGardener.Domain.Entities
         public required string Insulation { get; set; }
 
         [ForeignKey("GrowthHabit")]
-        [Display(Name = "Growth Habit")]
         public required int GrowthHabitId { get; set; }
+        [ValidateNever]
+        public GrowthHabit GrowthHabit { get; set; } = null!;
+
         [ForeignKey("LifeCycle")]
-        [Display(Name = "Life Cycle")]
         public required int LifeCycleId { get; set; }
+		[ValidateNever]
+		public LifeCycle LifeCycle { get; set; } = null!;
 
         [Display(Name = "Image Url")]
         public  string? ImageUrl { get; set; }

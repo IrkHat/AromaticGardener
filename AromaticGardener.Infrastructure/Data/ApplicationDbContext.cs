@@ -1,5 +1,4 @@
 ﻿using AromaticGardener.Domain.Entities;
-using AromaticGardener.Infrastructure.Migrations;
 using Microsoft.EntityFrameworkCore;
 namespace AromaticGardener.Infrastructure.Data
 {
@@ -13,16 +12,43 @@ namespace AromaticGardener.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<HerbSeedKit>().HasData(
-                new HerbSeedKit
+            modelBuilder.Entity<GrowthHabit>().HasData(
+                new GrowthHabit
                 {
                     Id = 1,
-                    HerbId = 1,
-                    Name = "Name",
-                    Description = "Description",
-                    Price = 15.99,
-                    Stock = 200
-
+                    Habit = "Herb",
+                },
+                new GrowthHabit
+                {
+                    Id = 2,
+                    Habit = "Shrub",
+                },
+                new GrowthHabit
+                {
+                    Id = 3,
+                    Habit = "Tree",
+                },
+                new GrowthHabit
+                {
+                    Id = 4,
+                    Habit = "Vine",
+                }
+            );
+            modelBuilder.Entity<LifeCycle>().HasData(
+                new LifeCycle
+                {
+                    Id = 1,
+                    Cycle = "Annual",
+                },
+                new LifeCycle
+                {
+                    Id = 2,
+                    Cycle = "Biennial",
+                },
+                new LifeCycle
+                {
+                    Id = 3,
+                    Cycle = "Perennial",
                 }
             );
             modelBuilder.Entity<Herb>().HasData(
@@ -33,14 +59,14 @@ namespace AromaticGardener.Infrastructure.Data
                     ScientificName = "Origanum Vulgare",
                     Description = "Perennial herbaceous plant of the mint family, characterized by opposite, aromatic leaves and purple flowers.",
                     Bloom = "Summer",
-                    BestSoilType = "Well-drained",
+                    BestSoilType = "Well-drained soil",
                     SoilPhMin = 6.5,
                     SoilPhMax = 7,
                     Watering = "Water when topsoil is dry",
                     Insulation = "Full",
                     GrowthHabitId = 1,
                     LifeCycleId = 1,
-                    ImageUrl = ""
+                    ImageUrl = "",
                 }
             );
             
