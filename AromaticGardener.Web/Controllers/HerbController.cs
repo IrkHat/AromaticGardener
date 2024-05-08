@@ -28,11 +28,14 @@ namespace AromaticGardener.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Herb obj)
         {
-            if(ModelState.IsValid) { 
-            _db.Herbs.Add(obj);
-            _db.SaveChanges();
-            return RedirectToAction(nameof(Index));
+            if (ModelState.IsValid)
+            {
+                _db.Herbs.Add(obj);
+                _db.SaveChanges();
+                TempData["success"] = "The herb record has been created successfully!";
+                return RedirectToAction(nameof(Index));
             }
+            TempData["error"] = "The herb record could not be created...";
             return View(obj);
         }
         public IActionResult Update(int herbId)
@@ -53,11 +56,11 @@ namespace AromaticGardener.Web.Controllers
             {
                 _db.Herbs.Update(obj);
                 _db.SaveChanges();
-                //TempData["success"] = "The herb record has been updated successfully!";
+                TempData["success"] = "The herb record has been updated successfully!";
                 return RedirectToAction(nameof(Index));
             }
 
-            //TempData["error"] = "The herb record could not be updated...";
+            TempData["error"] = "The herb record could not be updated...";
             return View(obj);
         }
         public IActionResult Delete(int herbId)
@@ -81,12 +84,12 @@ namespace AromaticGardener.Web.Controllers
                 _db.Herbs.Remove(objFromDb);
                 _db.SaveChanges();
 
-                //TempData["success"] = "The herb record has been deleted successfully!";
+                TempData["success"] = "The herb record has been deleted successfully!";
 
                 return RedirectToAction(nameof(Index));
             }
 
-            //TempData["error"] = "The herb record could not be deleted...";
+            TempData["error"] = "The herb record could not be deleted...";
             return View(obj);
         }
     }

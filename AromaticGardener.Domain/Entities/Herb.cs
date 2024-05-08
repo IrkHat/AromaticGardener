@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AromaticGardener.Domain.Entities
 {
@@ -7,6 +8,8 @@ namespace AromaticGardener.Domain.Entities
         public int Id { get; set; }
         [Display(Name = "Common Name")]
         public required string CommonName { get; set; }
+        [Display(Name = "Scientific Name")]
+        public required string ScientificName { get; set; }
         [Display(Name = "Description")]
         public string? Description { get; set; }
         [Display(Name = "Blooms In")]
@@ -23,10 +26,14 @@ namespace AromaticGardener.Domain.Entities
         public required string Watering { get; set; }
         [Display(Name = "Insulation")]
         public required string Insulation { get; set; }
+
+        [ForeignKey("GrowthHabit")]
         [Display(Name = "Growth Habit")]
-        public required string GrowthHabit { get; set; }
+        public required int GrowthHabitId { get; set; }
+        [ForeignKey("LifeCycle")]
         [Display(Name = "Life Cycle")]
-        public required string LifeCycle { get; set; }
+        public required int LifeCycleId { get; set; }
+
         [Display(Name = "Image Url")]
         public  string? ImageUrl { get; set; }
 
