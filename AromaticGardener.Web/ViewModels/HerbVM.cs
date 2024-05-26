@@ -11,5 +11,6 @@ namespace AromaticGardener.Web.ViewModels
         public IEnumerable<SelectListItem>? LifeCycleList { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem>? GrowthHabitList { get; set; }
+        public IFormFile? ImageFile { get; set; }
     }
 }

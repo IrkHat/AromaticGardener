@@ -10,7 +10,7 @@
     </div>
 
     <div class="card-body border p-4">
-        <form method="post" class="row">
+        <form method="post" enctype="multipart/form-data" class="row">
             <div class="p-3">
                 <div class="form-floating py-1 col-12">
                     <input asp-for="Herb.CommonName" class="form-control border shadow" />
@@ -57,29 +57,25 @@
                     <label asp-for="Herb.Insulation" class="ms-2"></label>
                     <span asp-validation-for="Herb.Insulation" class="text-danger"></span>
                 </div>
-
                 <div class="form-floating py-1 col-12">
-                    <select asp-for="@Model.Herb.GrowthHabitId" asp-items="@Model.GrowthHabitList" class="form-select border shadow">
+                    <select asp-for="Herb.GrowthHabitId" asp-items="Model.GrowthHabitList" class="form-select border shadow">
                         <option disabled selected>-- Select Habit --</option>
                     </select>
                     <label asp-for="Herb.GrowthHabit.Habit" class="ms-2"></label>
                     <span asp-validation-for="Herb.GrowthHabitId" class="text-danger"></span>
                 </div>
-
                 <div class="form-floating py-1 col-12">
-                    <select asp-for="@Model.Herb.LifeCycleId" asp-items="@Model.LifeCycleList" class="form-select border shadow">
+                    <select asp-for="Herb.LifeCycleId" asp-items="Model.LifeCycleList" class="form-select border shadow">
                         <option disabled selected>-- Select Cycle --</option>
                     </select>
                     <label asp-for="Herb.LifeCycle.Cycle" class="ms-2"></label>
                     <span asp-validation-for="Herb.LifeCycleId" class="text-danger"></span>
-                </div>           
-
-                <div class="form-floating py-1 col-12">
-                    <input asp-for="Herb.ImageUrl" class="form-control border shadow" />
-                    <label asp-for="Herb.ImageUrl" class="ms-2"></label>
-                    <span asp-validation-for="Herb.ImageUrl" class="text-danger"></span>
                 </div>
-
+                <div class="form-floating py-1 col-12">
+                    <input asp-for="ImageFile" type="file" class="form-control border shadow" />
+                    <label asp-for="ImageFile" class="ms-2"></label>
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
                 <div class="row pt-2">
                     <div class="col-6 col-md-3">
                         <button type="submit" class="btn btn-success w-100">

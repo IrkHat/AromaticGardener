@@ -1,17 +1,21 @@
 ﻿using AromaticGardener.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+
 namespace AromaticGardener.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
         public DbSet<GrowthHabit> GrowthHabits { get; set; }
         public DbSet<LifeCycle> LifeCycles { get; set; }
         public DbSet<Herb> Herbs { get; set; }
-        //public DbSet<HerbSeedKit> HerbSeedKits { get; set; }
+        public DbSet<HerbKit> HerbKits { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<GrowthHabit>().HasData(
                 new GrowthHabit
                 {
@@ -34,6 +38,7 @@ namespace AromaticGardener.Infrastructure.Data
                     Habit = "Vine",
                 }
             );
+
             modelBuilder.Entity<LifeCycle>().HasData(
                 new LifeCycle
                 {
@@ -51,6 +56,7 @@ namespace AromaticGardener.Infrastructure.Data
                     Cycle = "Perennial",
                 }
             );
+
             modelBuilder.Entity<Herb>().HasData(
                 new Herb
                 {
@@ -65,11 +71,22 @@ namespace AromaticGardener.Infrastructure.Data
                     Watering = "Water when topsoil is dry",
                     Insulation = "Full",
                     GrowthHabitId = 1,
-                    LifeCycleId = 1,
+                    LifeCycleId = 3,
                     ImageUrl = "",
                 }
             );
-            
+
+            modelBuilder.Entity<HerbKit>().HasData(
+                new HerbKit
+                {
+                    Id = 1,
+                    HerbId = 1,
+                    Name = "Basic Herb Kit",
+                    Description = "Includes seeds for growing oregano.",
+                    Price = 9.99,
+                    Stock = 50
+                }
+            );
         }
     }
 }

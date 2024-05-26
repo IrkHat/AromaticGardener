@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AromaticGardener.Web", "AromaticGardener.Web\AromaticGardener.Web.csproj", "{53A1799C-13B4-4EAF-90FF-8C88B365AAA5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DDA5FC6B-EAFD-49FA-897B-854B6BCA3610} = {DDA5FC6B-EAFD-49FA-897B-854B6BCA3610}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AromaticGardener.Domain", "AromaticGardener.Domain\AromaticGardener.Domain.csproj", "{58D7EF59-FACB-4EB1-B56B-E6189BB570EE}"
 EndProject

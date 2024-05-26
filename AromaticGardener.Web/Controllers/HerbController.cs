@@ -1,40 +1,40 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AromaticGardener.Application.Common.Interfaces;
+using AromaticGardener.Domain.Entities;
+using AromaticGardener.Web.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AromaticGardener.Domain.Entities;
-using AromaticGardener.Infrastructure.Data;
-using AromaticGardener.Web.ViewModels;
+using System.IO;
 
 namespace AromaticGardener.Web.Controllers
 {
     public class HerbController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public HerbController(ApplicationDbContext db)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _hostEnvironment;
+
+        public HerbController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
+            _hostEnvironment = hostEnvironment;
         }
+
         public IActionResult Index()
         {
-            var herbs = _db.Herbs
-                 .Include(u => u.LifeCycle)
-                 .Include(x => x.GrowthHabit)
-                 .ToList();
-
+            var herbs = _unitOfWork.Herb.GetAll(includeProperties: "LifeCycle,GrowthHabit");
             return View(herbs);
         }
 
-        //          GET
         public IActionResult Create()
         {
             HerbVM herbVM = new()
             {
-                LifeCycleList = _db.LifeCycles.ToList().Select(u => new SelectListItem
+                LifeCycleList = _unitOfWork.LifeCycle.GetAll().Select(u => new SelectListItem
                 {
                     Text = u.Cycle,
                     Value = u.Id.ToString(),
                 }),
-                GrowthHabitList = _db.GrowthHabits.ToList().Select(y => new SelectListItem
+                GrowthHabitList = _unitOfWork.GrowthHabit.GetAll().Select(y => new SelectListItem
                 {
                     Text = y.Habit,
                     Value = y.Id.ToString(),
@@ -44,77 +44,117 @@ namespace AromaticGardener.Web.Controllers
             return View(herbVM);
         }
 
-        //          POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(HerbVM obj)
+        public IActionResult Create(HerbVM obj, IFormFile? ImageFile)
         {
             if (ModelState.IsValid)
             {
-                _db.Herbs.Add(obj.Herb);
-                _db.SaveChanges();
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                if (ImageFile != null && ImageFile.Length > 0)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
+                    string path = Path.Combine(wwwRootPath, "images/HerbImages", fileName);
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        ImageFile.CopyTo(fileStream);
+                    }
+                    obj.Herb.ImageUrl = "/images/HerbImages/" + fileName;
+                }
+                else
+                {
+                    obj.Herb.ImageUrl = "/images/HerbImages/default.png";
+                }
+
+                _unitOfWork.Herb.Add(obj.Herb);
+                _unitOfWork.Save();
                 TempData["success"] = "The herb record has been created successfully!";
                 return RedirectToAction(nameof(Index));
             }
             TempData["error"] = "The herb record could not be created...";
 
-            obj.LifeCycleList = _db.LifeCycles.ToList().Select(u => new SelectListItem
+            obj.LifeCycleList = _unitOfWork.LifeCycle.GetAll().Select(u => new SelectListItem
             {
                 Text = u.Cycle,
                 Value = u.Id.ToString(),
             });
-            obj.GrowthHabitList = _db.GrowthHabits.ToList().Select(y => new SelectListItem
+            obj.GrowthHabitList = _unitOfWork.GrowthHabit.GetAll().Select(y => new SelectListItem
             {
                 Text = y.Habit,
                 Value = y.Id.ToString(),
             });
 
-
             return View(obj);
         }
+
         public IActionResult Update(int herbId)
         {
             HerbVM herbVM = new()
             {
-                LifeCycleList = _db.LifeCycles.ToList().Select(u => new SelectListItem
+                LifeCycleList = _unitOfWork.LifeCycle.GetAll().Select(u => new SelectListItem
                 {
                     Text = u.Cycle,
                     Value = u.Id.ToString(),
                 }),
-                GrowthHabitList = _db.GrowthHabits.ToList().Select(y => new SelectListItem
+                GrowthHabitList = _unitOfWork.GrowthHabit.GetAll().Select(y => new SelectListItem
                 {
                     Text = y.Habit,
                     Value = y.Id.ToString(),
                 }),
-                Herb = _db.Herbs.FirstOrDefault(_ => _.Id == herbId)!
+                Herb = _unitOfWork.Herb.Get(h => h.Id == herbId, includeProperties: "LifeCycle,GrowthHabit")
             };
 
-            if (herbVM.Herb is null)
+            if (herbVM.Herb == null)
             {
                 return RedirectToAction("Error", "Home");
             }
 
             return View(herbVM);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(HerbVM herbVM)
+        public IActionResult Update(HerbVM herbVM, IFormFile? ImageFile)
         {
             if (ModelState.IsValid && herbVM.Herb.Id > 0)
             {
-                _db.Herbs.Update(herbVM.Herb);
-                _db.SaveChanges();
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                var oldHerb = _unitOfWork.Herb.Get(h => h.Id == herbVM.Herb.Id);
+                if (ImageFile != null && ImageFile.Length > 0)
+                {
+                    if (oldHerb != null && oldHerb.ImageUrl != "/images/HerbImages/default.png")
+                    {
+                        var oldImagePath = Path.Combine(wwwRootPath, oldHerb.ImageUrl.TrimStart('/'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
+                    string path = Path.Combine(wwwRootPath, "images/HerbImages", fileName);
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        ImageFile.CopyTo(fileStream);
+                    }
+                    herbVM.Herb.ImageUrl = "/images/HerbImages/" + fileName;
+                }
+                else
+                {
+                    herbVM.Herb.ImageUrl = oldHerb?.ImageUrl ?? "/images/HerbImages/default.png";
+                }
+
+                _unitOfWork.Herb.Update(herbVM.Herb);
+                _unitOfWork.Save();
                 TempData["success"] = "The herb record has been updated successfully!";
                 return RedirectToAction(nameof(Index));
             }
 
-
-            herbVM.LifeCycleList = _db.LifeCycles.ToList().Select(u => new SelectListItem
+            herbVM.LifeCycleList = _unitOfWork.LifeCycle.GetAll().Select(u => new SelectListItem
             {
                 Text = u.Cycle,
                 Value = u.Id.ToString(),
             });
-            herbVM.GrowthHabitList = _db.GrowthHabits.ToList().Select(y => new SelectListItem
+            herbVM.GrowthHabitList = _unitOfWork.GrowthHabit.GetAll().Select(y => new SelectListItem
             {
                 Text = y.Habit,
                 Value = y.Id.ToString(),
@@ -124,43 +164,53 @@ namespace AromaticGardener.Web.Controllers
 
             return View(herbVM);
         }
+
         public IActionResult Delete(int herbId)
         {
             HerbVM herbVM = new()
             {
-                LifeCycleList = _db.LifeCycles.ToList().Select(u => new SelectListItem
+                LifeCycleList = _unitOfWork.LifeCycle.GetAll().Select(u => new SelectListItem
                 {
                     Text = u.Cycle,
                     Value = u.Id.ToString(),
                 }),
-                GrowthHabitList = _db.GrowthHabits.ToList().Select(y => new SelectListItem
+                GrowthHabitList = _unitOfWork.GrowthHabit.GetAll().Select(y => new SelectListItem
                 {
                     Text = y.Habit,
                     Value = y.Id.ToString(),
                 }),
-                Herb = _db.Herbs.FirstOrDefault(_ => _.Id == herbId)!
+                Herb = _unitOfWork.Herb.Get(h => h.Id == herbId, includeProperties: "LifeCycle,GrowthHabit")
             };
 
-            if (herbVM.Herb is null)
+            if (herbVM.Herb == null)
             {
                 return RedirectToAction("Error", "Home");
             }
 
             return View(herbVM);
-
         }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(HerbVM herbVM)
         {
-            Herb? objFromDb = _db.Herbs.FirstOrDefault(_ => _.Id == herbVM.Herb.Id);
+            Herb? objFromDb = _unitOfWork.Herb.Get(h => h.Id == herbVM.Herb.Id);
 
-            if (objFromDb is not null)
+            if (objFromDb != null)
             {
-                _db.Herbs.Remove(objFromDb);
-                _db.SaveChanges();
+                if (objFromDb.ImageUrl != "/images/HerbImages/default.png")
+                {
+                    var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, objFromDb.ImageUrl.TrimStart('/'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
+                _unitOfWork.Herb.Remove(objFromDb);
+                _unitOfWork.Save();
 
                 TempData["success"] = "The herb record has been deleted successfully!";
-
                 return RedirectToAction(nameof(Index));
             }
 
